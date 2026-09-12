@@ -62,17 +62,18 @@
   .day-head a { color: var(--accent); text-decoration: none; font-size: 14px; }
   .day-head a:hover { text-decoration: underline; }
   .day-head .cnt { font-size: 13px; color: var(--faint); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
-  .card {
+  .daycard {
     background: var(--card); border: 0.5px solid var(--border);
     border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow);
   }
-  .card:hover { border-color: var(--border-2); }
-  .card .cat { font-size: 12px; color: var(--accent); margin: 0 0 6px; }
-  .card h3 { margin: 0 0 8px; font-size: 17px; font-weight: 500; }
-  .card .one { margin: 0 0 12px; font-size: 14px; color: var(--sub); }
-  .card ul { margin: 0 0 12px; padding-left: 18px; font-size: 13px; color: var(--sub); }
-  .card ul li { margin-bottom: 3px; }
+  .daycard:hover { border-color: var(--border-2); }
+  .lead { margin: 0 0 16px; font-size: 14px; color: var(--sub); }
+  .secs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+  .sec { border-top: 0.5px solid var(--border); padding-top: 12px; }
+  .sec .cat { font-size: 12px; color: var(--accent); margin: 0 0 6px; }
+  .sec h3 { margin: 0 0 8px; font-size: 16px; font-weight: 500; }
+  .sec ul { margin: 0 0 12px; padding-left: 18px; font-size: 13px; color: var(--sub); }
+  .sec ul li { margin-bottom: 3px; }
   .tags { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag { font-size: 12px; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--sub); }
   .todo {
@@ -100,7 +101,7 @@
 
   <div class="metrics">
     <div class="metric"><p class="lab">天数</p><p class="num" id="m-days">0</p></div>
-    <div class="metric"><p class="lab">笔记</p><p class="num" id="m-notes">0</p></div>
+    <div class="metric"><p class="lab">知识点</p><p class="num" id="m-notes">0</p></div>
     <div class="metric"><p class="lab">待办</p><p class="num" id="m-todos">0</p></div>
   </div>
 
@@ -118,74 +119,89 @@
 </div>
 
 <script>
+/* 一天一张卡片：sections 是当天所有知识点，卡片内部按小节排 */
 var DAYS = [
   {
     date: "2026-09-11",
     file: "2026-09-11.md",
-    todos: [
-      "菜单项目：在 GitHub 上真正建仓库并 push 一次（今天只学了流程）",
-      "菜单项目：开 GitHub Pages 拿到在线网址",
-      "菜单项目：44 道菜只配了 2 张图（昨天遗留）"
-    ],
-    notes: [
+    lead: "今天把命令行基础补齐：搞懂大模型本质，学会 cd / ls / mv，又补了 mkdir 建目录与 touch 建空文件。命令部分全部在 /tmp 实测过。",
+    sections: [
       {
         cat: "概念",
         title: "大模型是什么",
-        one: "用海量文本喂出来的概率续写机：能理解/生成，但不是真懂",
         points: [
-          "参数几十亿到万亿，B = 十亿",
-          "预训练学语言规律 + 自回归一个词一个词续写",
+          "海量文本喂出来的「概率续写机」：一个词一个词地预测下一个词",
+          "三个关键词：参数（7B/70B，B = 十亿）、预训练、自回归生成",
           "会幻觉、会过时，不真懂世界，要你把关",
-          "大模型=大哥(只动嘴)，Agent=外挂身体+执行系统(让大哥能动手)"
+          "比喻：大模型 = 大哥（只动嘴）；Agent = 外挂身体 + 秘书团队 + 工具箱（让大哥能想也能做）"
         ],
         tags: ["参数", "预训练", "幻觉", "Agent"]
       },
       {
         cat: "命令行",
-        title: "cd 命令",
-        one: "change directory 切换目录；cd 无参回家，cd - 回上一站",
+        title: "cd 切换目录",
         points: [
           "cd 不带参数直接回 ~（家目录）",
-          "cd - 在两地间来回跳",
-          "只换自己位置，不动文件（和 mv 不同）"
+          "cd - 在上一次目录和当前目录间来回跳",
+          "只换自己的位置，不动任何文件（和 mv 正好相反）"
         ],
         tags: ["cd -", "cd ..", "绝对/相对路径"]
       },
       {
         cat: "命令行",
-        title: "ls 命令",
-        one: "list 列目录；-l 详情、-a 隐藏、-h 人类可读大小",
+        title: "ls 列出目录内容",
         points: [
-          "ls -la 看全部+详情，排查最常用",
-          "macOS 上色用 -G，--color 被静默忽略",
-          "长格式首位 - 文件 / d 目录"
+          "ls -la 看全部（含隐藏）+ 详情，排查最常用",
+          "macOS 上色用 -G，写 --color 不报错但被静默忽略",
+          "长格式首位：- 是文件，d 是目录"
         ],
         tags: ["-la", "-G", "BSD 差异"]
       },
       {
-        cat: "项目",
-        title: "菜单项目部署到 GitHub",
-        one: "git init→add→commit→push，GitHub Pages 把静态页免费变网址",
+        cat: "命令行",
+        title: "mv 移动与改名",
         points: [
-          "纯静态页零构建，Pages 直接托管 index.html",
-          "Settings→Pages 选 main 分支出网址",
-          "改完 git add.→commit→push 自动重新发布"
+          "最后一个参数是目录就移动、是文件名就改名",
+          "默认静默覆盖、不打招呼，防丢用 -i 或 -n",
+          "macOS 是 BSD 版，没有 -b 备份（写 -b 直接报 illegal option）",
+          "-v 显示从→到过程，多文件一起移进目录很直观"
         ],
-        tags: ["git", "GitHub Pages", "菜单2"]
+        tags: ["-i -n", "静默覆盖", "BSD 差异"]
+      },
+      {
+        cat: "命令行",
+        title: "mkdir 新建目录",
+        points: [
+          "mkdir -p 父/子/孙 一次建多层，自动补中间目录",
+          "不加 -p 建多层会报错：No such file or directory",
+          "-v 建的时候回显目录名（macOS 实测支持）"
+        ],
+        tags: ["-p", "嵌套", "BSD 差异"]
+      },
+      {
+        cat: "命令行",
+        title: "touch 建空文件/刷时间",
+        points: [
+          "touch 不存在的文件 → 建 0 字节空文件",
+          "touch 已有文件 → 只刷新修改时间，不动内容",
+          "-c 文件不存在就不建，避免误建；也能 touch 目录刷时间"
+        ],
+        tags: ["空文件", "-c", "时间戳"]
       }
-    ]
+    ],
+    todos: []
   },
   {
     date: "2026-09-10",
     file: "2026-09-10.md",
-    notes: [
+    lead: "今天两件事：搞懂 mv 的移动/改名（以及它的静默覆盖风险）、弄清 WorkBuddy 工作空间怎么建。mv 的行为是先在 /tmp 跑过才写的。",
+    sections: [
       {
         cat: "命令行",
-        title: "mv 命令",
-        one: "不搬数据只改门牌号，inode 全程不变；默认静默覆盖，务必加 -i",
+        title: "mv 移动与重命名",
         points: [
-          "同分区移动瞬间完成，100GB 也一样",
-          "覆盖不打招呼，建议 alias mv='mv -i'",
+          "同分区只改目录项，inode 全程不变，100GB 也是瞬间完成",
+          "默认静默覆盖、不打招呼，建议 alias mv='mv -i'",
           "macOS 是 BSD 版，没有 -u 和 -b"
         ],
         tags: ["inode", "-i -n -v", "BSD 差异"]
@@ -193,14 +209,15 @@ var DAYS = [
       {
         cat: "工具",
         title: "WorkBuddy 工作空间",
-        one: "工作空间就是个文件夹，入口在输入框左下角；不选会生成时间戳目录",
         points: [
-          "点输入框左下角「选择工作空间」指定目录",
-          "不指定就在默认目录生成时间戳文件夹，事后难认",
-          ".workbuddy 是项目数据，不是缓存，别删"
+          "工作空间就是个文件夹，入口在输入框左下角「选择工作空间」",
+          "不指定就按时间戳生成目录（如 2026-09-10-22-16-01），过一周就认不出",
+          ".workbuddy 是项目数据不是缓存，别删；三层：项目记忆 / 用户全局 / 身份设定"
         ],
         tags: ["选择工作空间", ".workbuddy", "三层记忆"]
-      }    ]
+      }
+    ],
+    todos: []
   }
 ];
 
@@ -216,14 +233,14 @@ var doneMap = loadDone();
 function allCats() {
   var c = ["全部"];
   DAYS.forEach(function (d) {
-    d.notes.forEach(function (n) { if (c.indexOf(n.cat) < 0) c.push(n.cat); });
+    d.sections.forEach(function (s) { if (c.indexOf(s.cat) < 0) c.push(s.cat); });
   });
   return c;
 }
 
-function hit(n, q) {
+function hit(s, q) {
   if (!q) return true;
-  var hay = (n.title + n.one + n.points.join("") + n.tags.join("")).toLowerCase();
+  var hay = (s.cat + s.title + s.points.join("") + s.tags.join("")).toLowerCase();
   return hay.indexOf(q) >= 0;
 }
 
@@ -247,39 +264,46 @@ function renderDays() {
 
   DAYS.forEach(function (d) {
     var dateHit = !q || d.date.indexOf(q) >= 0;
-    var notes = d.notes.filter(function (n) {
-      if (state.cat !== "全部" && n.cat !== state.cat) return false;
-      return hit(n, q) || (dateHit && q);
+    var secs = d.sections.filter(function (s) {
+      if (state.cat !== "全部" && s.cat !== state.cat) return false;
+      return hit(s, q) || (dateHit && q);
     });
-    if (!notes.length) return;
+    if (!secs.length) return;
     shown++;
 
     var sec = document.createElement("div");
     sec.className = "day";
     var head = document.createElement("div");
     head.className = "day-head";
+    var cnt = secs.length === d.sections.length
+      ? d.sections.length + " 个知识点"
+      : "筛出 " + secs.length + " / " + d.sections.length + " 个";
     head.innerHTML =
       "<h2>" + d.date + "</h2>" +
-      '<span class="cnt">' + notes.length + " 篇</span>" +
+      '<span class="cnt">' + cnt + "</span>" +
       '<a href="' + d.file + '">看原文</a>';
     sec.appendChild(head);
 
-    var grid = document.createElement("div");
-    grid.className = "grid";
-    notes.forEach(function (n) {
-      var card = document.createElement("div");
-      card.className = "card";
-      var ul = n.points.map(function (p) { return "<li>" + p + "</li>"; }).join("");
-      var tg = n.tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("");
-      card.innerHTML =
-        '<p class="cat">' + n.cat + "</p>" +
-        "<h3>" + n.title + "</h3>" +
-        '<p class="one">' + n.one + "</p>" +
+    var card = document.createElement("div");
+    card.className = "daycard";
+    card.innerHTML = '<p class="lead">' + d.lead + "</p>";
+
+    var box2 = document.createElement("div");
+    box2.className = "secs";
+    secs.forEach(function (s) {
+      var item = document.createElement("div");
+      item.className = "sec";
+      var ul = s.points.map(function (p) { return "<li>" + p + "</li>"; }).join("");
+      var tg = s.tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("");
+      item.innerHTML =
+        '<p class="cat">' + s.cat + "</p>" +
+        "<h3>" + s.title + "</h3>" +
         "<ul>" + ul + "</ul>" +
         '<div class="tags">' + tg + "</div>";
-      grid.appendChild(card);
+      box2.appendChild(item);
     });
-    sec.appendChild(grid);
+    card.appendChild(box2);
+    sec.appendChild(card);
 
     if (d.todos && d.todos.length && (state.cat === "全部")) {
       var lab = document.createElement("p");
@@ -319,7 +343,7 @@ function updateMetrics() {
   var cats = allCats().length - 1;
   var n = 0, t = 0;
   DAYS.forEach(function (d) {
-    n += d.notes.length;
+    n += d.sections.length;
     (d.todos || []).forEach(function (_, i) { if (!doneMap[d.date + "#" + i]) t++; });
   });
   $("m-days").textContent = DAYS.length;
