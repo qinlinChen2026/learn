@@ -1,12 +1,13 @@
 # 学习日记
 
 > 一天一个文件，文件名用日期：`YYYY-MM-DD.md`
-> 网页版总览：[index.html](./index.html)（双击打开，能搜索能筛选）
+> 🌐 在线网页版：<https://qinlinchen2026.github.io/learn/>
+> 💻 本地网页版：[index.html](./index.html)（双击打开，能搜索能筛选）
 
 ## 现在有什么
 
 - `2026-09-10.md` — mv 命令 / WorkBuddy 工作空间
-- `2026-09-11.md` — 大模型概念 / cd 命令 / ls 命令
+- `2026-09-11.md` — 大模型概念 / cd / ls / mv / mkdir / touch / cp 命令
 
 ## 规矩
 
@@ -16,3 +17,4 @@
 4. 涉及命令/代码行为，**先在 `/tmp` 实测再写**
 5. 一天一张卡片：网页里每天只出一张卡，当天所有知识点收在卡片内部（按小节排），顶部一句导语总结全天
 6. 新增或改动日记后，让我重新生成 `index.html`
+7. 改完用 `git add` / `git commit` / `git push` 同步到 GitHub，在线版才会更新
