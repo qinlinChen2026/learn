@@ -122,6 +122,64 @@
 /* 一天一张卡片：sections 是当天所有知识点，卡片内部按小节排 */
 var DAYS = [
   {
+    date: "2026-09-13",
+    file: "2026-09-13.md",
+    lead: "今天两件：把学习日记和家常菜单收进 Chrome 书签栏的「我的网站」文件夹（file:// 直收 + 验证 http.server 两个站都 200）；又搞懂了 .md 和 .html——前者是写日记用的纯文本标记语言（你正在写的 2026-09-13.md 就是它），后者是网页版 index.html 用的页面骨架，正好对上这套笔记系统的两种格式。",
+    sections: [
+      {
+        cat: "工具",
+        title: "Chrome 收藏目录（书签文件夹）",
+        points: [
+          "书签栏就是现成的「收藏目录」，在书签栏空白处右键「添加文件夹」就能分组",
+          "显示/隐藏书签栏：⌘+Shift+B；批量整理进书签管理器：⌘+Option+B",
+          "收藏当前页：⌘+D，或点地址栏右边那颗☆"
+        ],
+        tags: ["⌘+Shift+B", "添加文件夹", "⌘+D"]
+      },
+      {
+        cat: "工具",
+        title: "把两个网站收进书签栏",
+        points: [
+          "学习日记 → file:///Users/qinglin/WorkBuddy/learn/index.html",
+          "家常菜单 → file:///Users/qinglin/WorkBuddy/菜单2/index.html（注意 file:// 是三个斜杠）",
+          "打开页按 ⌘+D、文件夹选「我的网站」即可；想要固定地址可先起 python3 -m http.server 再收藏 http"
+        ],
+        tags: ["file://", "我的网站", "http.server"]
+      },
+      {
+        cat: "概念",
+        title: ".md 是 Markdown（你正在写的格式）",
+        points: [
+          "轻量标记语言：用纯文本写排版，# 标题、- 列表、**粗体** 加粗，不用工具栏",
+          "你今天写的 2026-09-13.md、项目里的 README.md 都是它；纯文本、不挑编辑器、能直接渲染",
+          "是这套日记的「源文件」格式：人写、好维护、能 git 版本管理"
+        ],
+        tags: ["# 标题", "纯文本", "源文件"]
+      },
+      {
+        cat: "概念",
+        title: ".html 是网页骨架（网页版就是它）",
+        points: [
+          "HyperText Markup Language：用 <标签>内容</标签> 告诉浏览器哪是标题哪是段落",
+          "index.html 里的 <h1>/<p>/<a> 正是渲染你日记的写法",
+          "三搭档：HTML 管结构、CSS 管样式（顶部 <style>）、JS 管交互（底部 <script>）"
+        ],
+        tags: ["<h1>", "HTML/CSS/JS", "成品页"]
+      },
+      {
+        cat: "概念",
+        title: "md 与 html 的关系（闭环）",
+        points: [
+          "你学的两样正好是你笔记系统的两种格式：日记写 .md，网页版是 .html",
+          "实务常是「写 md → 转 html 发布」：在线版就是把 md 生成网页部署到 GitHub Pages",
+          "一句话：md 是源文件（人写），html 是成品页（浏览器看）；写笔记用 md，发上网变 html"
+        ],
+        tags: ["源文件", "成品页", "GitHub Pages"]
+      }
+    ],
+    todos: []
+  },
+  {
     date: "2026-09-11",
     file: "2026-09-11.md",
     lead: "今天把命令行基础补齐：搞懂大模型本质，学会 cd / ls / mv，又补了 mkdir 建目录与 touch 建空文件。命令部分全部在 /tmp 实测过。",

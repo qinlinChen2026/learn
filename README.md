@@ -8,6 +8,7 @@
 
 - `2026-09-10.md` — mv 命令 / WorkBuddy 工作空间
 - `2026-09-11.md` — 大模型概念 / cd / ls / mv / mkdir / touch / cp 命令
+- `2026-09-13.md` — Chrome 书签栏收纳两个本地网站 / .md 与 .html 的含义
 
 ## 规矩
 
